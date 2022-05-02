@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/angular-ssr-rendering",
+            "outputPath": "dist/angular-SSR-Rendering/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -98,6 +98,64 @@
             ],
             "scripts": []
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/angular-SSR-Rendering/server",
+            "main": "server.ts",
+            "tsConfig": "tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "angular-SSR-Rendering:build:development",
+              "serverTarget": "angular-SSR-Rendering:server:development"
+            },
+            "production": {
+              "browserTarget": "angular-SSR-Rendering:build:production",
+              "serverTarget": "angular-SSR-Rendering:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@nguniversal/builders:prerender",
+          "options": {
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "angular-SSR-Rendering:build:production",
+              "serverTarget": "angular-SSR-Rendering:server:production"
+            },
+            "development": {
+              "browserTarget": "angular-SSR-Rendering:build:development",
+              "serverTarget": "angular-SSR-Rendering:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }
